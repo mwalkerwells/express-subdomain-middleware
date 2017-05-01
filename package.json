@@ -1,6 +1,6 @@
 {
   "name": "express-subdomain-middleware",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Express subdomain middleware support for arbitrary hostnames.",
   "repository": "https://github.com/mwalkerwells/express-subdomain-middleware",
   "main": "./lib/index.js",
