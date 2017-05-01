@@ -1,0 +1,50 @@
+{
+  "name": "express-subdomain-middleware",
+  "version": "1.0.0",
+  "description": "Express subdomain middleware support for arbitrary hostnames.",
+  "main": "./lib/index.js",
+  "scripts": {
+    "types": "flow-copy-source -v src lib",
+    "flow": "./node_modules/.bin/flow",
+    "build": "./node_modules/.bin/babel src -d lib && npm run types",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=7.9.0"
+  },
+  "babel": {
+    "presets": [
+      "stage-3",
+      "flow",
+      [
+        "env",
+        {
+          "targets": {
+            "node": 7.9
+          }
+        }
+      ]
+    ]
+  },
+  "keywords": [
+    "express",
+    "middlware",
+    "subdomain",
+    "hostname"
+  ],
+  "author": {
+    "name": "M. Walker Wells",
+    "email": "npm@mwalkerwells.com"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-flow": "^6.23.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "express": "^4.15.2",
+    "flow-bin": "^0.45.0",
+    "flow-copy-source": "^1.1.0"
+  }
+}
