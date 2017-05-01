@@ -38,4 +38,6 @@ app.use(subdomain('prod', prodRouter))
 router.use(subdomain('user', userRouter))
 
 //...
+// curl dev.carddav.localhost:8080
+//...
 ```
