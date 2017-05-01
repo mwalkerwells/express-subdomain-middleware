@@ -7,11 +7,6 @@ Express subdomain middleware support for arbitrary hostnames.
 import express, { Router } from 'express'
 import subdomain from 'express-subdomain-middleware'
 
-const imapRouter = Router()
-imapRouter.use((request: $Request, response: $Response, next: NextFunction) => {
-  console.log(request.headers.host) // localhost:8080
-})
-
 const devRouter = Router()
 devRouter.use((request: $Request, response: $Response, next: NextFunction) => {
   console.log(request.headers.host) // imap.localhost:8080
@@ -20,6 +15,11 @@ devRouter.use((request: $Request, response: $Response, next: NextFunction) => {
 const prodRouter = Router()
 devRouter.use((request: $Request, response: $Response, next: NextFunction) => {
   console.log(request.headers.host) // imap.localhost:8080
+})
+
+const imapRouter = Router()
+imapRouter.use((request: $Request, response: $Response, next: NextFunction) => {
+  console.log(request.headers.host) // localhost:8080
 })
 
 // Express server handles two subdomain levels:
