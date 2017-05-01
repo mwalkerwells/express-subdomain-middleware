@@ -2,6 +2,7 @@
   "name": "express-subdomain-middleware",
   "version": "1.0.0",
   "description": "Express subdomain middleware support for arbitrary hostnames.",
+  "repository": "https://github.com/mwalkerwells/express-subdomain-middleware",
   "main": "./lib/index.js",
   "scripts": {
     "types": "flow-copy-source -v src lib",
