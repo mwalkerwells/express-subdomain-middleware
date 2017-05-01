@@ -2,6 +2,8 @@
 Express subdomain middleware support for arbitrary hostnames.
 
 ```js
+// @flow
+
 import express, { Router } from 'express'
 import subdomain from 'express-subdomain-middleware'
 
@@ -25,12 +27,12 @@ devRouter.use((request: $Request, response: $Response, next: NextFunction) => {
 const app = express()
 
 // Setup second level subdomain (B)
-// http://_____.__B__.localhost:8080
+// http://____.__B__.localhost:8080
 devRouter.use(subdomain('imap', imapRouter)) 
 prodRouter.use(subdomain('imap', imapRouter))
 
 // Setup first level subdomain (A)
-// http://__A__._____.localhost:8080
+// http://__A__.____.localhost:8080
 app.use(subdomain('dev', devRouter))
 app.use(subdomain('prod', prodRouter))
 
