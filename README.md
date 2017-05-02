@@ -1,6 +1,11 @@
 # express-subdomain-middleware
-Express subdomain middleware support for arbitrary hostnames.
+Express subdomain middleware support for arbitrary hostnames. It allows for the composition of subdomain routers of variable nesting.
 
+```js
+http://level1.level2.level3.levelN.localhost:8080
+```
+
+#### Example
 ```js
 // @flow
 
