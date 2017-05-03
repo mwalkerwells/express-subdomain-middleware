@@ -9,7 +9,7 @@ http://level1.level2.level3.levelN.localhost:8080
 ```js
 // @flow
 
-import typeof express, { Router } from 'express'
+import express, { Router } from 'express'
 import subdomain from 'express-subdomain-middleware'
 
 // Flow Types
