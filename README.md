@@ -62,7 +62,18 @@ imapRouter.use(subdomain(
   }
 ))
 
-
+// COMPOSITION
+// http://intern.secret.subdomain.test.localhost:8080
+const composedSubdomains =
+  subdomain('intern',
+    subdomain('secret',
+      subdomain('subdomain',
+        subdomain('test', (request: $Request, response: $Response, next: NextFunction) => {
+          console.log(request.headers.host) // localhost:8080
+          console.log(request.subdomains) // []
+          next()
+        })
+  )))
 
 // SETUP
 
@@ -74,6 +85,7 @@ const app = express()
 // http://__1__.____.____.localhost:8080
 app.use(subdomain('dev', devRouter))
 app.use(subdomain('prod', prodRouter))
+app.use(composedSubdomains)
 
 
 
