@@ -3,21 +3,28 @@ import { Router, type $Request, type $Response, type NextFunction } from 'expres
 
 type Middleware = (req: $Request, res: $Response, next: NextFunction) => mixed
 
-export default (targetSubdomain: string, handler: express$Router | Middleware): Middleware => (
+export default (target: string, handler: express$Router | Middleware): Middleware => (
   request: $Request,
   response: $Response,
   next: NextFunction,
 ) => {
-  const { subdomains } = request
-  const [subdomain, ...rest] = subdomains.reverse()
-  if (subdomain === targetSubdomain) {
+  const { headers, subdomains } = request
+  const [first, ...rest] = hostnameToArray(headers.host)
+
+  if (first === target) {
     // When router middleware checks the 'host' value, the matched subdomain is excluded.
     // Request Mutation: This allows for further routing if necessary.
-    request.headers.host = request.headers.host.split(`${subdomain}.`)[1]
+    mutateHost(headers, rest)
     if (handler instanceof Router) {
       handler.handle(request, response, next)
+    } else {
+      handler(request, response, next)
     }
-    handler(request, response, next)
   }
-  next()
 }
+
+function mutateHost(headers: { host: string }, hostnameArray: Array<string>): void {
+  headers.host = hostnameArray.join('.')
+}
+
+const hostnameToArray = <T: string>(hostname: T): Array<T> => hostname.split('.')
