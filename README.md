@@ -21,7 +21,8 @@ import {
 
 // Routers
 
-// DEV
+// DEV (Level 1)
+// http://_1___.____.____.localhost:8080
 const devRouter = Router()
 
 devRouter.use((request: $Request, response: $Response, next: NextFunction) => {
@@ -29,7 +30,8 @@ devRouter.use((request: $Request, response: $Response, next: NextFunction) => {
   console.log(request.subdomains) // [ 'imap', 'mwalkerwells' ]
 })
 
-// PROD
+// PROD (Level 1)
+// http://_1___.____.____.localhost:8080
 const prodRouter = Router()
 
 prodRouter.use((request: $Request, response: $Response, next: NextFunction) => {
@@ -37,38 +39,43 @@ prodRouter.use((request: $Request, response: $Response, next: NextFunction) => {
   console.log(request.subdomains) // [ 'imap', 'mwalkerwells' ]
 })
 
-// IMAP
+// IMAP (Level 2)
+// http://____.__2__.____.localhost:8080
 const imapRouter = Router()
+
+// Mounting on dev & prod subdomains
+devRouter.use(subdomain('imap', imapRouter))
+prodRouter.use(subdomain('imap', imapRouter))
 
 imapRouter.use((request: $Request, response: $Response, next: NextFunction) => {
   console.log(request.headers.host) // mwalkerwells.localhost:8080
   console.log(request.subdomains) // [ 'mwalkerwells' ]
 })
 
-// Subdomain "Paths"
-// Using middleware instead of router
-imapRouter.use(subdomain('mwalkerwells', (request: $Request, response: $Response, next: NextFunction) => {
-  console.log(request.headers.host) // localhost:8080
-  console.log(request.subdomains) // []
-}))
+// USER (Level 3)
+// http://____.____.__3__.localhost:8080
+imapRouter.use(subdomain(
+  'mwalkerwells',
+  (request: $Request, response: $Response, next: NextFunction) => { // Using middleware instead of router
+    console.log(request.headers.host) // localhost:8080
+    console.log(request.subdomains) // []
+  }
+))
 
 
 
 // SETUP
 
-// Express server handles two subdomain levels:
-// • http://__A__.__B__.localhost:8080
+// This Express server handles 3 subdomain levels:
+// • http://__1__.__2__.__3__.localhost:8080
 const app = express()
 
-// Setup second level subdomain (B)
-// http://____.__B__.localhost:8080
-devRouter.use(subdomain('imap', imapRouter))
-prodRouter.use(subdomain('imap', imapRouter))
-
-// Setup first level subdomain (A)
-// http://__A__.____.localhost:8080
+// Setup level 1 subdomain
+// http://__1__.____.____.localhost:8080
 app.use(subdomain('dev', devRouter))
 app.use(subdomain('prod', prodRouter))
+
+
 
 // Example Request
 
