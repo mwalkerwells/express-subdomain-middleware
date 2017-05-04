@@ -1,7 +1,9 @@
 // @flow
-import type { Middleware, $Request, $Response, NextFunction } from 'express'
+import { Router, type $Request, type $Response, type NextFunction } from 'express'
 
-export default (targetSubdomain: string, router: express$Router): Middleware => {
+type Middleware = (req: $Request, res: $Response, next: NextFunction) => mixed
+
+export default (targetSubdomain: string, handler: express$Router | Middleware): Middleware => {
   return (request: $Request, response: $Response, next: NextFunction) => {
     if (request.headers.host) {
       const { host } = request.headers
@@ -13,7 +15,10 @@ export default (targetSubdomain: string, router: express$Router): Middleware => 
             // When router middleware checks the 'host' value, the matched subdomain is excluded.
             // This allows for further routing if necessary.
             unafeMutateObj(request.headers, 'host', rest.join('.'))
-            router.handle(request, response, next)
+            if (handler instanceof Router) {
+              handler.handle(request, response, next)
+            }
+            handler(request, response, next)
           }
         }
       }
