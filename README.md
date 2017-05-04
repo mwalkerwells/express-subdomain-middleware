@@ -20,22 +20,41 @@ import {
 } from 'express'
 
 // Routers
+
+// DEV
 const devRouter = Router()
+
 devRouter.use((request: $Request, response: $Response, next: NextFunction) => {
-  console.log(request.headers.host) // imap.localhost:8080
+  console.log(request.headers.host) // imap.mwalkerwells.localhost:8080
+  console.log(request.subdomains) // [ 'imap', 'mwalkerwells' ]
 })
 
+// PROD
 const prodRouter = Router()
-devRouter.use((request: $Request, response: $Response, next: NextFunction) => {
-  console.log(request.headers.host) // imap.localhost:8080
+
+prodRouter.use((request: $Request, response: $Response, next: NextFunction) => {
+  console.log(request.headers.host) // imap.mwalkerwells.localhost:8080
+  console.log(request.subdomains) // [ 'imap', 'mwalkerwells' ]
 })
 
+// IMAP
 const imapRouter = Router()
+
 imapRouter.use((request: $Request, response: $Response, next: NextFunction) => {
-  console.log(request.headers.host) // localhost:8080
+  console.log(request.headers.host) // mwalkerwells.localhost:8080
+  console.log(request.subdomains) // [ 'mwalkerwells' ]
 })
 
-// App Setup
+// Subdomain "Paths"
+// Using middleware instead of router
+imapRouter.use(subdomain('mwalkerwells', (request: $Request, response: $Response, next: NextFunction) => {
+  console.log(request.headers.host) // localhost:8080
+  console.log(request.subdomains) // []
+}))
+
+
+
+// SETUP
 
 // Express server handles two subdomain levels:
 // • http://__A__.__B__.localhost:8080
@@ -51,12 +70,9 @@ prodRouter.use(subdomain('imap', imapRouter))
 app.use(subdomain('dev', devRouter))
 app.use(subdomain('prod', prodRouter))
 
-
-router.use(subdomain('user', userRouter))
-
 // Example Request
 
 //...
-// curl dev.carddav.localhost:8080
+// curl dev.carddav.mwalkerwells.localhost:8080
 //...
 ```
