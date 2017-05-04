@@ -9,11 +9,11 @@ export default (targetSubdomain: string, handler: express$Router | Middleware): 
   next: NextFunction,
 ) => {
   const { subdomains } = request
-  const [subdomain, ...rest] = subdomains
+  const [subdomain, ...rest] = subdomains.reverse()
   if (subdomain === targetSubdomain) {
     // When router middleware checks the 'host' value, the matched subdomain is excluded.
     // Request Mutation: This allows for further routing if necessary.
-    request.subdomains = rest
+    request.headers.host = request.headers.host.split(`${subdomain}.`)[1]
     if (handler instanceof Router) {
       handler.handle(request, response, next)
     }
